@@ -25,7 +25,7 @@ spec:
                 selector:
                   type: object
                   properties:
-                    matchlables:
+                    matchLabels:
                       type: array
                       properties:
                         apiVersion: string

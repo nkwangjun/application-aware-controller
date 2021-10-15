@@ -17,7 +17,7 @@ spec:
               type: object
               properties:
                 apiVersion: string
-                king: string
+                kind: string
                 resources:
                   type: array
                   properties:

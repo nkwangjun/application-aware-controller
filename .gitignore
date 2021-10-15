@@ -1,38 +1,3 @@
-Skip to content
-Search or jump to…
-Pull requests
-Issues
-Marketplace
-Explore
- 
-@nkwangjun 
-CentaurusInfra
-/
-arktos
-Public
-20
-19069
-Code
-Issues
-174
-Pull requests
-16
-Actions
-Projects
-1
-Wiki
-Security
-Insights
-arktos/.gitignore
-@Sindica
-Sindica Api server data partition reset on the fly (#123)
-…
-Latest commit 32169a4 on 20 Mar 2020
- History
- 2 contributors
-@dingyin@Sindica
-136 lines (100 sloc)  2.38 KB
-   
 # OSX leaves these everywhere on SMB shares
 ._*
 
