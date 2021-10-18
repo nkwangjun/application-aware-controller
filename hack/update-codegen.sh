@@ -5,11 +5,13 @@ set -o nounset
 set -o pipefail
 
 SCRIPT_ROOT=$(dirname "${BASH_SOURCE[0]}")/..
+CODEGEN_PKG=${CODEGEN_PKG:-$(cd "${SCRIPT_ROOT}"; ls -d -1 ./vendor/k8s.io/code-generator 2>/dev/null || echo ../code-generator)}
 
-# 安装k8s.io/code-generator
-[[ -d $GOPATH/src/k8s.io/code-generator ]] || go get -u k8s.io/code-generator/...
-
-# 执行代码自动生成, 其中pkg/client是生成目标目录, pkg/apis是类型定义目录
-bash $GOPATH/src/k8s.io/code-generator/generate-groups.sh all \
+# generate the code with:
+# --output-base    because this script should also be able to run inside the vendor dir of
+#                  k8s.io/kubernetes. The output-base is needed for the generators to output into the vendor dir
+#                  instead of the $GOPATH directly. For normal projects this can be dropped.
+bash "${CODEGEN_PKG}"/generate-groups.sh "deepcopy,client,informer,lister" \
   k8s.io/application-aware-controller/pkg/generated k8s.io/application-aware-controller/pkg/apis \
-  aacontroller:v1 \
+  samplecontroller:v1alpha1 \
+  --output-base "$(dirname "${BASH_SOURCE[0]}")/../../.." \
