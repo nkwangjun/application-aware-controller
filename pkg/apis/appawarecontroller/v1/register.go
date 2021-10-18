@@ -4,13 +4,12 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
-	"k8s.io/application-aware-controller/pkg/apis/samplecontroller"
 
-	aacontroller "k8s.io/application-aware-controller/pkg/apis/appawarecontroller"
+	appawarecontroller "k8s.io/application-aware-controller/pkg/apis/appawarecontroller"
 )
 
 // SchemeGroupVersion is group version used to register these objects
-var SchemeGroupVersion = schema.GroupVersion{Group: aacontroller.GroupName, Version: "v1"}
+var SchemeGroupVersion = schema.GroupVersion{Group: appawarecontroller.GroupName, Version: "v1"}
 
 // Kind takes an unqualified kind and returns back a Group qualified GroupKind
 func Kind(kind string) schema.GroupKind {
