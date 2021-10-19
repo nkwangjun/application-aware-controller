@@ -28,8 +28,8 @@ type FakeAppawarecontrollerV1 struct {
 	*testing.Fake
 }
 
-func (c *FakeAppawarecontrollerV1) ForecastPolicies(namespace string) v1.ForecastPolicyInterface {
-	return &FakeForecastPolicies{c, namespace}
+func (c *FakeAppawarecontrollerV1) AppawareHorizontalPodAutoscalers(namespace string) v1.AppawareHorizontalPodAutoscalerInterface {
+	return &FakeAppawareHorizontalPodAutoscalers{c, namespace}
 }
 
 func (c *FakeAppawarecontrollerV1) ResourceRecommendations(namespace string) v1.ResourceRecommendationInterface {

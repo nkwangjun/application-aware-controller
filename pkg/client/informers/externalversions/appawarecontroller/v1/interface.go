@@ -24,8 +24,8 @@ import (
 
 // Interface provides access to all the informers in this group version.
 type Interface interface {
-	// ForecastPolicies returns a ForecastPolicyInformer.
-	ForecastPolicies() ForecastPolicyInformer
+	// AppawareHorizontalPodAutoscalers returns a AppawareHorizontalPodAutoscalerInformer.
+	AppawareHorizontalPodAutoscalers() AppawareHorizontalPodAutoscalerInformer
 	// ResourceRecommendations returns a ResourceRecommendationInformer.
 	ResourceRecommendations() ResourceRecommendationInformer
 }
@@ -41,9 +41,9 @@ func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakList
 	return &version{factory: f, namespace: namespace, tweakListOptions: tweakListOptions}
 }
 
-// ForecastPolicies returns a ForecastPolicyInformer.
-func (v *version) ForecastPolicies() ForecastPolicyInformer {
-	return &forecastPolicyInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+// AppawareHorizontalPodAutoscalers returns a AppawareHorizontalPodAutoscalerInformer.
+func (v *version) AppawareHorizontalPodAutoscalers() AppawareHorizontalPodAutoscalerInformer {
+	return &appawareHorizontalPodAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // ResourceRecommendations returns a ResourceRecommendationInformer.

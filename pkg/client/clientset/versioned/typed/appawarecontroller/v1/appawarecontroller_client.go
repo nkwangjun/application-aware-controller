@@ -26,7 +26,7 @@ import (
 
 type AppawarecontrollerV1Interface interface {
 	RESTClient() rest.Interface
-	ForecastPoliciesGetter
+	AppawareHorizontalPodAutoscalersGetter
 	ResourceRecommendationsGetter
 }
 
@@ -35,8 +35,8 @@ type AppawarecontrollerV1Client struct {
 	restClient rest.Interface
 }
 
-func (c *AppawarecontrollerV1Client) ForecastPolicies(namespace string) ForecastPolicyInterface {
-	return newForecastPolicies(c, namespace)
+func (c *AppawarecontrollerV1Client) AppawareHorizontalPodAutoscalers(namespace string) AppawareHorizontalPodAutoscalerInterface {
+	return newAppawareHorizontalPodAutoscalers(c, namespace)
 }
 
 func (c *AppawarecontrollerV1Client) ResourceRecommendations(namespace string) ResourceRecommendationInterface {

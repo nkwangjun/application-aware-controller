@@ -18,13 +18,13 @@ limitations under the License.
 
 package v1
 
-// ForecastPolicyListerExpansion allows custom methods to be added to
-// ForecastPolicyLister.
-type ForecastPolicyListerExpansion interface{}
+// AppawareHorizontalPodAutoscalerListerExpansion allows custom methods to be added to
+// AppawareHorizontalPodAutoscalerLister.
+type AppawareHorizontalPodAutoscalerListerExpansion interface{}
 
-// ForecastPolicyNamespaceListerExpansion allows custom methods to be added to
-// ForecastPolicyNamespaceLister.
-type ForecastPolicyNamespaceListerExpansion interface{}
+// AppawareHorizontalPodAutoscalerNamespaceListerExpansion allows custom methods to be added to
+// AppawareHorizontalPodAutoscalerNamespaceLister.
+type AppawareHorizontalPodAutoscalerNamespaceListerExpansion interface{}
 
 // ResourceRecommendationListerExpansion allows custom methods to be added to
 // ResourceRecommendationLister.

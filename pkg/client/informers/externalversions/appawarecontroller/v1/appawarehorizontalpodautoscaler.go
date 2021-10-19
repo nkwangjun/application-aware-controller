@@ -32,59 +32,59 @@ import (
 	cache "k8s.io/client-go/tools/cache"
 )
 
-// ForecastPolicyInformer provides access to a shared informer and lister for
-// ForecastPolicies.
-type ForecastPolicyInformer interface {
+// AppawareHorizontalPodAutoscalerInformer provides access to a shared informer and lister for
+// AppawareHorizontalPodAutoscalers.
+type AppawareHorizontalPodAutoscalerInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1.ForecastPolicyLister
+	Lister() v1.AppawareHorizontalPodAutoscalerLister
 }
 
-type forecastPolicyInformer struct {
+type appawareHorizontalPodAutoscalerInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
 	tweakListOptions internalinterfaces.TweakListOptionsFunc
 	namespace        string
 }
 
-// NewForecastPolicyInformer constructs a new informer for ForecastPolicy type.
+// NewAppawareHorizontalPodAutoscalerInformer constructs a new informer for AppawareHorizontalPodAutoscaler type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
-func NewForecastPolicyInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
-	return NewFilteredForecastPolicyInformer(client, namespace, resyncPeriod, indexers, nil)
+func NewAppawareHorizontalPodAutoscalerInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
+	return NewFilteredAppawareHorizontalPodAutoscalerInformer(client, namespace, resyncPeriod, indexers, nil)
 }
 
-// NewFilteredForecastPolicyInformer constructs a new informer for ForecastPolicy type.
+// NewFilteredAppawareHorizontalPodAutoscalerInformer constructs a new informer for AppawareHorizontalPodAutoscaler type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
-func NewFilteredForecastPolicyInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
+func NewFilteredAppawareHorizontalPodAutoscalerInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
 	return cache.NewSharedIndexInformer(
 		&cache.ListWatch{
 			ListFunc: func(options metav1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.AppawarecontrollerV1().ForecastPolicies(namespace).List(context.TODO(), options)
+				return client.AppawarecontrollerV1().AppawareHorizontalPodAutoscalers(namespace).List(context.TODO(), options)
 			},
 			WatchFunc: func(options metav1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.AppawarecontrollerV1().ForecastPolicies(namespace).Watch(context.TODO(), options)
+				return client.AppawarecontrollerV1().AppawareHorizontalPodAutoscalers(namespace).Watch(context.TODO(), options)
 			},
 		},
-		&appawarecontrollerv1.ForecastPolicy{},
+		&appawarecontrollerv1.AppawareHorizontalPodAutoscaler{},
 		resyncPeriod,
 		indexers,
 	)
 }
 
-func (f *forecastPolicyInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewFilteredForecastPolicyInformer(client, f.namespace, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, f.tweakListOptions)
+func (f *appawareHorizontalPodAutoscalerInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
+	return NewFilteredAppawareHorizontalPodAutoscalerInformer(client, f.namespace, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, f.tweakListOptions)
 }
 
-func (f *forecastPolicyInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&appawarecontrollerv1.ForecastPolicy{}, f.defaultInformer)
+func (f *appawareHorizontalPodAutoscalerInformer) Informer() cache.SharedIndexInformer {
+	return f.factory.InformerFor(&appawarecontrollerv1.AppawareHorizontalPodAutoscaler{}, f.defaultInformer)
 }
 
-func (f *forecastPolicyInformer) Lister() v1.ForecastPolicyLister {
-	return v1.NewForecastPolicyLister(f.Informer().GetIndexer())
+func (f *appawareHorizontalPodAutoscalerInformer) Lister() v1.AppawareHorizontalPodAutoscalerLister {
+	return v1.NewAppawareHorizontalPodAutoscalerLister(f.Informer().GetIndexer())
 }
