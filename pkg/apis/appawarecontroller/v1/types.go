@@ -5,44 +5,67 @@ import (
 )
 
 // +genclient
-// +genclient:noStatus
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-// ForecastPolicy is a specification for a ForecastPolicy resource
-type ForecastPolicy struct {
+// AppawareHorizontalPodAutoscaler is a specification for a AppawareHorizontalPodAutoscaler resource
+type AppawareHorizontalPodAutoscaler struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec ForecastPolicySpec `json:"spec"`
+	Spec   AppawareHorizontalPodAutoscalerSpec   `json:"spec"`
+	Status AppawareHorizontalPodAutoscalerStatus `json:"status,omitempty"`
 }
 
-// ForecastPolicySpec is the spec for a ForecastPolicy resource
-type ForecastPolicySpec struct {
-	ForecastWindow *int32             `json:"forecastWindow"`
-	ActionType     string             `json:"actionType"`
-	Selector       []ForecastSelector `json:"selector"`
+type AppawareHorizontalPodAutoscalerSpec struct {
+	ScaleTargetRef ScaleTargetRef `json:"scaleTargetRef"`
+	ScaleMode      string         `json:"scaleMode"`
+	ForecastWindow *int32         `json:"forecastWindow"`
+	Jobs           []Job          `json:"jobs,omitempty"`
 }
 
-// ForecastSelector is the selector for a ForecastPolicy resource
-type ForecastSelector struct {
-	MatchLabels []MatchLabel `json:"matchLabels"`
-}
-
-// MatchLabel is the matchLabels for a ForecastSelector resource
-type MatchLabel struct {
+type ScaleTargetRef struct {
 	ApiVersion string `json:"apiVersion"`
 	Kind       string `json:"kind"`
 	Name       string `json:"name"`
 }
 
+type Job struct {
+	Name     string `json:"name"`
+	Schedule string `json:"schedule"`
+	// job will only run once if enabled.
+	RunOnce    bool  `json:"runOnce,omitempty"`
+	TargetSize int32 `json:"targetSize"`
+}
+
+// AppawareHorizontalPodAutoscalerStatus defines the observed state of AppawareHorizontalPodAutoscaler
+type AppawareHorizontalPodAutoscalerStatus struct {
+	JobStatus []JobStatus `json:"jobstatus,omitempty"`
+}
+
+type JobState string
+
+const (
+	Succeed   JobState = "Succeed"
+	Failed    JobState = "Failed"
+	Submitted JobState = "Submitted"
+)
+
+type JobStatus struct {
+	JobId string `json:"jobId"`
+	State JobState `json:"state"`
+	LastProbeTime metav1.Time `json:"lastProbeTime"`
+	// +optional
+	Message string `json:"message"`
+}
+
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-// ForecastPolicyList is a list of ForecastPolicy resources
-type ForecastPolicyList struct {
+// AppawareHorizontalPodAutoscalerList is a list of AppawareHorizontalPodAutoscaler resources
+type AppawareHorizontalPodAutoscalerList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata"`
 
-	Items []ForecastPolicy `json:"items"`
+	Items []AppawareHorizontalPodAutoscaler `json:"items"`
 }
 
 // +genclient
@@ -58,21 +81,20 @@ type ResourceRecommendation struct {
 }
 
 type ResourceRecommendationSpec struct {
-	ApiVersion string `json:"apiVersion"`
-	Kind string `json:"kind"`
-	Resources []ResourcePlacement `json:"resources"`
+	ApiVersion string              `json:"apiVersion"`
+	Kind       string              `json:"kind"`
+	Resources  []ResourcePlacement `json:"resources"`
 }
 
 type ResourcePlacement struct {
-	Name string `json:"name"`
+	Name       string      `json:"name"`
 	Placements []Placement `json:"placements"`
 }
 
 type Placement struct {
 	FlavorName string `json:"flavorName"`
-	Amount *int32 `json:"amount"`
+	Amount     *int32 `json:"amount"`
 }
-
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 

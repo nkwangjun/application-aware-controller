@@ -87,13 +87,13 @@ go build -o application-aware-controller .
 ./application-aware-controller -kubeconfig=$HOME/.kube/config
 
 # create a CustomResourceDefinition
-kubectl create -f artifacts/examples/crd.yaml
+kubectl create -f artifacts/examples/crd-resource-recommendation.yaml
 
 # create a custom resource of type Foo
-kubectl create -f artifacts/examples/example-foo.yaml
+kubectl create -f artifacts/examples/example-resource-recommendation.yaml
 
 # check deployments created through the custom resource
-kubectl get deployments
+kubectl get resourcerecomendations
 ```
 
 ## Use Cases
