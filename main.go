@@ -9,6 +9,7 @@ import (
 	"k8s.io/client-go/tools/clientcmd"
 	"k8s.io/klog/v2"
 
+	"k8s.io/application-aware-controller/pkg/appawarehpa"
 	clientset "k8s.io/application-aware-controller/pkg/client/clientset/versioned"
 	informers "k8s.io/application-aware-controller/pkg/client/informers/externalversions"
 	"k8s.io/application-aware-controller/pkg/signals"
@@ -44,9 +45,9 @@ func main() {
 	kubeInformerFactory := kubeinformers.NewSharedInformerFactory(kubeClient, time.Second*30)
 	aacInformerFactory := informers.NewSharedInformerFactory(aacClient, time.Second*30)
 
-	controller := NewController(kubeClient, aacClient,
+	controller := appawarehpa.NewController(kubeClient, aacClient,
 		kubeInformerFactory.Apps().V1().Deployments(),
-		aacInformerFactory.Appawarecontroller().V1().ForecastPolicies())
+		aacInformerFactory.Appawarecontroller().V1().AppawareHorizontalPodAutoscalers())
 
 	// notice that there is no need to run Start methods in a separate goroutine. (i.e. go kubeInformerFactory.Start(stopCh)
 	// Start method is non-blocking and runs all registered informers in a dedicated goroutine.

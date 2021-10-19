@@ -1,4 +1,4 @@
-package main
+package appawarehpa
 
 import (
 	"fmt"
@@ -52,9 +52,9 @@ type Controller struct {
 	aacclientset clientset.Interface
 
 	deploymentsLister appslisters.DeploymentLister
-	deploymentsSynced     cache.InformerSynced
-	forecastPolicysLister listers.ForecastPolicyLister
-	forecastPolicysSynced cache.InformerSynced
+	deploymentsSynced cache.InformerSynced
+	appawareHPALister listers.AppawareHorizontalPodAutoscalerLister
+	appawareHPASynced cache.InformerSynced
 
 	// workqueue is a rate limited work queue. This is used to queue work to be
 	// processed instead of performing it as soon as a change happens. This
@@ -72,7 +72,7 @@ func NewController(
 	kubeclientset kubernetes.Interface,
 	aacclientset clientset.Interface,
 	deploymentInformer appsinformers.DeploymentInformer,
-	forecastPolicyInformer informers.ForecastPolicyInformer) *Controller {
+	appawareHPAInformer informers.AppawareHorizontalPodAutoscalerInformer) *Controller {
 
 	// Create event broadcaster
 	// Add application-aware-controller types to the default Kubernetes Scheme so Events can be
@@ -85,19 +85,19 @@ func NewController(
 	recorder := eventBroadcaster.NewRecorder(scheme.Scheme, corev1.EventSource{Component: controllerAgentName})
 
 	controller := &Controller{
-		kubeclientset:         kubeclientset,
-		aacclientset:       aacclientset,
-		deploymentsLister:     deploymentInformer.Lister(),
-		deploymentsSynced:     deploymentInformer.Informer().HasSynced,
-		forecastPolicysLister: forecastPolicyInformer.Lister(),
-		forecastPolicysSynced: forecastPolicyInformer.Informer().HasSynced,
-		workqueue:             workqueue.NewNamedRateLimitingQueue(workqueue.DefaultControllerRateLimiter(), "ForecastPolicys"),
-		recorder:              recorder,
+		kubeclientset:     kubeclientset,
+		aacclientset:      aacclientset,
+		deploymentsLister: deploymentInformer.Lister(),
+		deploymentsSynced: deploymentInformer.Informer().HasSynced,
+		appawareHPALister: appawareHPAInformer.Lister(),
+		appawareHPASynced: appawareHPAInformer.Informer().HasSynced,
+		workqueue:         workqueue.NewNamedRateLimitingQueue(workqueue.DefaultControllerRateLimiter(), "ForecastPolicys"),
+		recorder:          recorder,
 	}
 
 	klog.Info("Setting up event handlers")
 	// Set up an event handler for when Foo resources change
-	forecastPolicyInformer.Informer().AddEventHandler(cache.ResourceEventHandlerFuncs{
+	appawareHPAInformer.Informer().AddEventHandler(cache.ResourceEventHandlerFuncs{
 		AddFunc: controller.enqueueForecastPolicy,
 		UpdateFunc: func(old, new interface{}) {
 			controller.enqueueForecastPolicy(new)
@@ -134,7 +134,7 @@ func (c *Controller) Run(workers int, stopCh <-chan struct{}) error {
 
 	// Wait for the caches to be synced before starting workers
 	klog.Info("Waiting for informer caches to sync")
-	if ok := cache.WaitForCacheSync(stopCh, c.deploymentsSynced, c.forecastPolicysSynced); !ok {
+	if ok := cache.WaitForCacheSync(stopCh, c.deploymentsSynced, c.appawareHPASynced); !ok {
 		return fmt.Errorf("failed to wait for caches to sync")
 	}
 
@@ -226,7 +226,7 @@ func (c *Controller) syncHandler(key string) error {
 	}
 
 	// Get the Foo resource with this namespace/name
-	forecastPolicy, err := c.forecastPolicysLister.ForecastPolicies(namespace).Get(name)
+	forecastPolicy, err := c.appawareHPALister.AppawareHorizontalPodAutoscalers(namespace).Get(name)
 	if err != nil {
 		// The Foo resource may no longer exist, in which case we stop
 		// processing.
@@ -267,7 +267,7 @@ func (c *Controller) syncHandler(key string) error {
 	return nil
 }
 
-func (c *Controller) updateForecastPolicyStatus(foo *accv1.ForecastPolicy, deployment *appsv1.Deployment) error {
+func (c *Controller) updateForecastPolicyStatus(foo *accv1.AppawareHorizontalPodAutoscaler, deployment *appsv1.Deployment) error {
 	// TODO
 	return nil
 }
@@ -314,7 +314,7 @@ func (c *Controller) handleObject(obj interface{}) {
 			return
 		}
 
-		foo, err := c.forecastPolicysLister.ForecastPolicies(object.GetNamespace()).Get(ownerRef.Name)
+		foo, err := c.appawareHPALister.AppawareHorizontalPodAutoscalers(object.GetNamespace()).Get(ownerRef.Name)
 		if err != nil {
 			klog.V(4).Infof("ignoring orphaned object '%s' of foo '%s'", object.GetSelfLink(), ownerRef.Name)
 			return
