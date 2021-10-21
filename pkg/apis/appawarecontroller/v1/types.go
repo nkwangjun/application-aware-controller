@@ -51,8 +51,8 @@ const (
 )
 
 type JobStatus struct {
-	JobId string `json:"jobId"`
-	State JobState `json:"state"`
+	JobId         string      `json:"jobId"`
+	State         JobState    `json:"state"`
 	LastProbeTime metav1.Time `json:"lastProbeTime"`
 	// +optional
 	Message string `json:"message"`
@@ -69,39 +69,39 @@ type AppawareHorizontalPodAutoscalerList struct {
 }
 
 // +genclient
-// +genclient:noStatus
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-// ResourceRecommendation is a specification for a ResourceRecommendation resource
-type ResourceRecommendation struct {
+// AppawareClusterAutoscaler is a specification for a AppawareClusterAutoscaler resource
+type AppawareClusterAutoscaler struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec ResourceRecommendationSpec `json:"spec"`
+	Spec AppawareClusterAutoscalerSpec `json:"spec"`
 }
 
-type ResourceRecommendationSpec struct {
-	ApiVersion string              `json:"apiVersion"`
-	Kind       string              `json:"kind"`
-	Resources  []ResourcePlacement `json:"resources"`
+type AppawareClusterAutoscalerSpec struct {
+	ForecastWindow *int32      `json:"forecastWindow"`
+	Nodegroups     []Nodegroup `json:"nodegroups"`
 }
 
-type ResourcePlacement struct {
-	Name       string      `json:"name"`
-	Placements []Placement `json:"placements"`
+type Nodegroup struct {
+	Name        string       `json:"name"`
+	Minsize     *int32       `json:"minsize"`
+	Maxsize     *int32       `json:"maxsize"`
+	Nodeflavors []NodeFlavor `json:"nodeFlavors"`
 }
 
-type Placement struct {
+type NodeFlavor struct {
 	FlavorName string `json:"flavorName"`
-	Amount     *int32 `json:"amount"`
+	Targetsize *int32 `json:"targetSize"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-// ResourceRecommendationList is a list of ResourceRecommendation resources
-type ResourceRecommendationList struct {
+// AppawareClusterAutoscalerList is a list of AppawareClusterAutoscalerList resources
+type AppawareClusterAutoscalerList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata"`
 
-	Items []ResourceRecommendation `json:"items"`
+	Items []AppawareClusterAutoscaler `json:"items"`
 }
