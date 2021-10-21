@@ -58,7 +58,7 @@ spec:
           tagetSize: 50
         - flavorName: c6.4xlarge.2
           tagetSize: 50
-    - name: group1
+    - name: group2
       minSize: 1
       maxSize: 100
       nodeFlavors:
