@@ -4,20 +4,23 @@ import (
 	"flag"
 	"time"
 
-	kubeinformers "k8s.io/client-go/informers"
-	"k8s.io/client-go/kubernetes"
-	"k8s.io/client-go/tools/clientcmd"
-	"k8s.io/klog/v2"
-
 	clientset "k8s.io/application-aware-controller/pkg/client/clientset/versioned"
 	informers "k8s.io/application-aware-controller/pkg/client/informers/externalversions"
 	aacontroller "k8s.io/application-aware-controller/pkg/controller"
 	"k8s.io/application-aware-controller/pkg/signals"
+	"k8s.io/application-aware-controller/pkg/trafficstrategy"
+	kubeinformers "k8s.io/client-go/informers"
+	"k8s.io/client-go/kubernetes"
+	"k8s.io/client-go/tools/clientcmd"
+	"k8s.io/klog/v2"
 )
 
 var (
-	masterURL  string
-	kubeconfig string
+	masterURL           string
+	kubeconfig          string
+	trafficStrategyAddr string
+	forecastWindow      int64
+	nodepoolConfig      string
 )
 
 func main() {
@@ -48,17 +51,29 @@ func main() {
 	controller := aacontroller.NewController(kubeClient, aacClient,
 		aacInformerFactory.Appawarecontroller().V1().AppawareHorizontalPodAutoscalers())
 
-	// notice that there is no need to run Start methods in a separate goroutine. (i.e. go kubeInformerFactory.Start(stopCh)
-	// Start method is non-blocking and runs all registered informers in a dedicated goroutine.
+	// notice that there is no need to run Start methods in a separate goroutine.
 	kubeInformerFactory.Start(stopCh)
 	aacInformerFactory.Start(stopCh)
 
 	if err = controller.Run(2, stopCh); err != nil {
 		klog.Fatalf("Error running controller: %s", err.Error())
 	}
+
+	server, err := trafficstrategy.NewWebServer(trafficStrategyAddr, forecastWindow, nodepoolConfig)
+	if err != nil {
+		klog.Fatalf("Error running controller: %s", err.Error())
+	}
+
+	// start traffic strategy webserver
+	go func() {
+		server.Serve()
+	}()
 }
 
 func init() {
 	flag.StringVar(&kubeconfig, "kubeconfig", "", "Path to a kubeconfig. Only required if out-of-cluster.")
 	flag.StringVar(&masterURL, "master", "", "The address of the Kubernetes API server. Overrides any value in kubeconfig. Only required if out-of-cluster.")
+	flag.StringVar(&trafficStrategyAddr, "traffic-strategy-bind-address", ":6060", "The address the traffic strategy endpoint binds to.")
+	flag.Int64Var(&forecastWindow, "forecast-window", 10, "The forecast window for traffic strategy.")
+	flag.StringVar(&nodepoolConfig, "nodepool-config", "", "Path to a nodepoolconfig.")
 }

@@ -1,0 +1,12 @@
+nodepools:
+  - name: group1
+    minSize: 1
+    maxSize: 100
+    nodeFlavors:
+      - c6s.4xlarge.2
+      - c6.4xlarge.2
+  - name: group2
+    minSize: 1
+    maxSize: 100
+    nodeFlavors:
+      - c3.4xlarge.2

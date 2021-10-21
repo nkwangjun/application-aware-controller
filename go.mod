@@ -10,6 +10,7 @@ require (
 	k8s.io/client-go v0.0.0-20211001003700-dbfa30b9d908
 	k8s.io/code-generator v0.0.0-20210930223515-ede4574ee351
 	k8s.io/klog/v2 v2.20.0
+	github.com/gorilla/mux v1.8.0
 )
 
 replace (
