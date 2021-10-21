@@ -25,6 +25,8 @@ spec:
                   type: integer
                   minimum: 1
                   maximum: 1000
+                appTrafficRatio:
+                  type:
                 jobs:
                   type: array
                   items:

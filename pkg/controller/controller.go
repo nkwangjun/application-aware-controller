@@ -1,26 +1,21 @@
-package appawarehpa
+package controller
 
 import (
 	"fmt"
 	"time"
 
-	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	"k8s.io/apimachinery/pkg/util/wait"
-	appsinformers "k8s.io/client-go/informers/apps/v1"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/kubernetes/scheme"
 	typedcorev1 "k8s.io/client-go/kubernetes/typed/core/v1"
-	appslisters "k8s.io/client-go/listers/apps/v1"
 	"k8s.io/client-go/tools/cache"
 	"k8s.io/client-go/tools/record"
 	"k8s.io/client-go/util/workqueue"
 	"k8s.io/klog/v2"
 
-	accv1 "k8s.io/application-aware-controller/pkg/apis/appawarecontroller/v1"
 	clientset "k8s.io/application-aware-controller/pkg/client/clientset/versioned"
 	aacscheme "k8s.io/application-aware-controller/pkg/client/clientset/versioned/scheme"
 	informers "k8s.io/application-aware-controller/pkg/client/informers/externalversions/appawarecontroller/v1"
@@ -30,29 +25,27 @@ import (
 const controllerAgentName = "application-aware-controller"
 
 const (
-	// SuccessSynced is used as part of the Event 'reason' when a Foo is synced
+	// SuccessSynced is used as part of the Event 'reason' when a AppawareHPA is synced
 	SuccessSynced = "Synced"
-	// ErrResourceExists is used as part of the Event 'reason' when a Foo fails
+	// ErrResourceExists is used as part of the Event 'reason' when a AppawareHPA fails
 	// to sync due to a Deployment of the same name already existing.
 	ErrResourceExists = "ErrResourceExists"
 
 	// MessageResourceExists is the message used for Events when a resource
 	// fails to sync due to a Deployment already existing
-	MessageResourceExists = "Resource %q already exists and is not managed by Foo"
-	// MessageResourceSynced is the message used for an Event fired when a Foo
+	MessageResourceExists = "Resource %q already exists and is not managed by AppawareHPA"
+	// MessageResourceSynced is the message used for an Event fired when a AppawareHPA
 	// is synced successfully
-	MessageResourceSynced = "Foo synced successfully"
+	MessageResourceSynced = "AppawareHPA synced successfully"
 )
 
-// Controller is the controller implementation for Foo resources
+// Controller is the controller implementation for ahpa resources
 type Controller struct {
 	// kubeclientset is a standard kubernetes clientset
 	kubeclientset kubernetes.Interface
-	// accclientset is a clientset for our own API group
-	aacclientset clientset.Interface
+	// aacclientset is a clientset for our own API group
 
-	deploymentsLister appslisters.DeploymentLister
-	deploymentsSynced cache.InformerSynced
+	aacclientset      clientset.Interface
 	appawareHPALister listers.AppawareHorizontalPodAutoscalerLister
 	appawareHPASynced cache.InformerSynced
 
@@ -67,11 +60,10 @@ type Controller struct {
 	recorder record.EventRecorder
 }
 
-// NewController returns a new sample controller
+// NewController returns a new ahpa controller
 func NewController(
 	kubeclientset kubernetes.Interface,
 	aacclientset clientset.Interface,
-	deploymentInformer appsinformers.DeploymentInformer,
 	appawareHPAInformer informers.AppawareHorizontalPodAutoscalerInformer) *Controller {
 
 	// Create event broadcaster
@@ -87,35 +79,20 @@ func NewController(
 	controller := &Controller{
 		kubeclientset:     kubeclientset,
 		aacclientset:      aacclientset,
-		deploymentsLister: deploymentInformer.Lister(),
-		deploymentsSynced: deploymentInformer.Informer().HasSynced,
 		appawareHPALister: appawareHPAInformer.Lister(),
 		appawareHPASynced: appawareHPAInformer.Informer().HasSynced,
-		workqueue:         workqueue.NewNamedRateLimitingQueue(workqueue.DefaultControllerRateLimiter(), "ForecastPolicys"),
-		recorder:          recorder,
+		workqueue: workqueue.NewNamedRateLimitingQueue(workqueue.DefaultControllerRateLimiter(),
+			"AppawareHorizontalPodAutoscalers"),
+		recorder: recorder,
 	}
 
 	klog.Info("Setting up event handlers")
-	// Set up an event handler for when Foo resources change
+	// Set up an event handler for when ahpa resources change
 	appawareHPAInformer.Informer().AddEventHandler(cache.ResourceEventHandlerFuncs{
-		AddFunc: controller.enqueueForecastPolicy,
+		AddFunc: controller.enqueueAppawareHorizontalPodAutoscaler,
 		UpdateFunc: func(old, new interface{}) {
-			controller.enqueueForecastPolicy(new)
+			controller.enqueueAppawareHorizontalPodAutoscaler(new)
 		},
-	})
-	deploymentInformer.Informer().AddEventHandler(cache.ResourceEventHandlerFuncs{
-		AddFunc: controller.handleObject,
-		UpdateFunc: func(old, new interface{}) {
-			newDepl := new.(*appsv1.Deployment)
-			oldDepl := old.(*appsv1.Deployment)
-			if newDepl.ResourceVersion == oldDepl.ResourceVersion {
-				// Periodic resync will send update events for all known Deployments.
-				// Two different versions of the same Deployment will always have different RVs.
-				return
-			}
-			controller.handleObject(new)
-		},
-		DeleteFunc: controller.handleObject,
 	})
 
 	return controller
@@ -134,12 +111,12 @@ func (c *Controller) Run(workers int, stopCh <-chan struct{}) error {
 
 	// Wait for the caches to be synced before starting workers
 	klog.Info("Waiting for informer caches to sync")
-	if ok := cache.WaitForCacheSync(stopCh, c.deploymentsSynced, c.appawareHPASynced); !ok {
+	if ok := cache.WaitForCacheSync(stopCh, c.appawareHPASynced); !ok {
 		return fmt.Errorf("failed to wait for caches to sync")
 	}
 
 	klog.Info("Starting workers")
-	// Launch two workers to process Foo resources
+	// Launch workers to process ahpa resources
 	for i := 0; i < workers; i++ {
 		go wait.Until(c.runWorker, time.Second, stopCh)
 	}
@@ -215,7 +192,7 @@ func (c *Controller) processNextWorkItem() bool {
 }
 
 // syncHandler compares the actual state with the desired, and attempts to
-// converge the two. It then updates the Status block of the Foo resource
+// converge the two. It then updates the Status block of the apha resource
 // with the current status of the resource.
 func (c *Controller) syncHandler(key string) error {
 	// Convert the namespace/name string into a distinct namespace and name
@@ -225,57 +202,34 @@ func (c *Controller) syncHandler(key string) error {
 		return nil
 	}
 
-	// Get the Foo resource with this namespace/name
-	forecastPolicy, err := c.appawareHPALister.AppawareHorizontalPodAutoscalers(namespace).Get(name)
+	// Get the apha resource with this namespace/name
+	ahpa, err := c.appawareHPALister.AppawareHorizontalPodAutoscalers(namespace).Get(name)
 	if err != nil {
-		// The Foo resource may no longer exist, in which case we stop
-		// processing.
+		// The apha resource may no longer exist, in which case we stop processing.
 		if errors.IsNotFound(err) {
-			utilruntime.HandleError(fmt.Errorf("foo '%s' in work queue no longer exists", key))
+			utilruntime.HandleError(fmt.Errorf("appawareHPA '%s' in work queue no longer exists", key))
 			return nil
 		}
 
 		return err
 	}
 
-	// add deployment name here
-	// deploymentName := forecastPolicy.Spec.DeploymentName
-	deploymentName := "test"
+	// TODO(wangjun): 参数校验, 一个HPA只允许关联一个AHPA, 失败则更新AHPA状态和原因
 
-	// Get the deployment with the name specified in Foo.spec
-	deployment, err := c.deploymentsLister.Deployments(forecastPolicy.Namespace).Get(deploymentName)
-	if err != nil {
-		return err
-	}
+	// TODO(wangjun): 如果AHPA作用的目标对象发生了变化, 则删除历史关联的后台任务
 
-	// If the Deployment is not controlled by this Foo resource, we should log
-	// a warning to the event recorder and return error msg.
-	if !metav1.IsControlledBy(deployment, forecastPolicy) {
-		msg := fmt.Sprintf(MessageResourceExists, deployment.Name)
-		c.recorder.Event(forecastPolicy, corev1.EventTypeWarning, ErrResourceExists, msg)
-		return fmt.Errorf("%s", msg)
-	}
+	// TODO(wangjun): 启动一个后台任务, 执行HPA调整
 
-	// Finally, we update the status block of the Foo resource to reflect the
-	// current state of the world
-	err = c.updateForecastPolicyStatus(forecastPolicy, deployment)
-	if err != nil {
-		return err
-	}
+	// TODO(wangjun): 更新AHPA状态和作用对象
 
-	c.recorder.Event(forecastPolicy, corev1.EventTypeNormal, SuccessSynced, MessageResourceSynced)
+	c.recorder.Event(ahpa, corev1.EventTypeNormal, SuccessSynced, MessageResourceSynced)
 	return nil
 }
 
-func (c *Controller) updateForecastPolicyStatus(foo *accv1.AppawareHorizontalPodAutoscaler, deployment *appsv1.Deployment) error {
-	// TODO
-	return nil
-}
-
-// enqueueForecastPolicy takes a Foo resource and converts it into a namespace/name
+// enqueueForecastPolicy takes a apha resource and converts it into a namespace/name
 // string which is then put onto the work queue. This method should *not* be
 // passed resources of any type other than Foo.
-func (c *Controller) enqueueForecastPolicy(obj interface{}) {
+func (c *Controller) enqueueAppawareHorizontalPodAutoscaler(obj interface{}) {
 	var key string
 	var err error
 	if key, err = cache.MetaNamespaceKeyFunc(obj); err != nil {
@@ -283,44 +237,4 @@ func (c *Controller) enqueueForecastPolicy(obj interface{}) {
 		return
 	}
 	c.workqueue.Add(key)
-}
-
-// handleObject will take any resource implementing metav1.Object and attempt
-// to find the Foo resource that 'owns' it. It does this by looking at the
-// objects metadata.ownerReferences field for an appropriate OwnerReference.
-// It then enqueues that Foo resource to be processed. If the object does not
-// have an appropriate OwnerReference, it will simply be skipped.
-func (c *Controller) handleObject(obj interface{}) {
-	var object metav1.Object
-	var ok bool
-	if object, ok = obj.(metav1.Object); !ok {
-		tombstone, ok := obj.(cache.DeletedFinalStateUnknown)
-		if !ok {
-			utilruntime.HandleError(fmt.Errorf("error decoding object, invalid type"))
-			return
-		}
-		object, ok = tombstone.Obj.(metav1.Object)
-		if !ok {
-			utilruntime.HandleError(fmt.Errorf("error decoding object tombstone, invalid type"))
-			return
-		}
-		klog.V(4).Infof("Recovered deleted object '%s' from tombstone", object.GetName())
-	}
-	klog.V(4).Infof("Processing object: %s", object.GetName())
-	if ownerRef := metav1.GetControllerOf(object); ownerRef != nil {
-		// If this object is not owned by a Foo, we should not do anything more
-		// with it.
-		if ownerRef.Kind != "Foo" {
-			return
-		}
-
-		foo, err := c.appawareHPALister.AppawareHorizontalPodAutoscalers(object.GetNamespace()).Get(ownerRef.Name)
-		if err != nil {
-			klog.V(4).Infof("ignoring orphaned object '%s' of foo '%s'", object.GetSelfLink(), ownerRef.Name)
-			return
-		}
-
-		c.enqueueForecastPolicy(foo)
-		return
-	}
 }

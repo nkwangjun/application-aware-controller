@@ -1,0 +1,38 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  # 名字必须与下面的spec字段匹配, 并且格式为'<名称的复数形式>.<组名>'
+  name: nodegroupconfigs.aacontroller.k8s.io
+spec:
+  # 组名称, 用于REST API: /apis/<组>/<版本>
+  group: aacontroller.k8s.io
+  # 列举此 CustomResourceDefinition所支持的版本
+  versions:
+    - name: v1
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                nodegroups:
+                  type: array
+                  properties:
+                    name: string
+                    flavorNames:
+                      type: array
+                      items:
+                        type: string
+  # 可以是Namespaced或Cluster
+  scope: Namespaced
+  names:
+    # 名称的复数形式, 用于 URL: /apis/<组>/<版本>/<名称的复数形式>
+    plural: nodegroupconfigs
+    # 名称的单数形式, 作为命令行使用时和显示时的别名
+    singular: nodegroupconfig
+    # kind通常是单数形式的驼峰编码(PascalCased)形式, 在资源清单中会使用这一形式
+    kind: NodeGroupConfig
+    # shortNames 允许在命令行使用较短的字符串来匹配资源
+    shortNames:
+      - ngc

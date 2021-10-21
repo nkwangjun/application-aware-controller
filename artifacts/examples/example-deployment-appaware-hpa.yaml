@@ -48,7 +48,7 @@ spec:
   scaleMode: auto
   # 预测未来10分钟所需的副本数, 单位为分钟
   forecastWindow: 10
-  # 支持 cronJobs
+#  支持 cronJobs
 #  jobs:
 #    - name: "scale-up"
 #      # target is the minReplicas = max(aaHPA scale up replicas, current replicas)
@@ -59,4 +59,3 @@ spec:
 #      # target is the maxReplicas = min(aaHPA scale up replicas, current replicas)
 #      schedule: "30 */1 * * * *"
 #      targetSize: 1
-
