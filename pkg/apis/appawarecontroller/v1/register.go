@@ -33,8 +33,6 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 	scheme.AddKnownTypes(SchemeGroupVersion,
 		&AppawareHorizontalPodAutoscaler{},
 		&AppawareHorizontalPodAutoscalerList{},
-		&AppawareClusterAutoscaler{},
-		&AppawareClusterAutoscalerList{},
 	)
 	metav1.AddToGroupVersion(scheme, SchemeGroupVersion)
 	return nil
