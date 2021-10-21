@@ -53,10 +53,10 @@ func (f *genericInformer) Lister() cache.GenericLister {
 func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource) (GenericInformer, error) {
 	switch resource {
 	// Group=appawarecontroller.k8s.io, Version=v1
+	case v1.SchemeGroupVersion.WithResource("appawareclusterautoscalers"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Appawarecontroller().V1().AppawareClusterAutoscalers().Informer()}, nil
 	case v1.SchemeGroupVersion.WithResource("appawarehorizontalpodautoscalers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Appawarecontroller().V1().AppawareHorizontalPodAutoscalers().Informer()}, nil
-	case v1.SchemeGroupVersion.WithResource("resourcerecommendations"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.Appawarecontroller().V1().ResourceRecommendations().Informer()}, nil
 
 	}
 

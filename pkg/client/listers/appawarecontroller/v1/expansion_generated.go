@@ -18,6 +18,14 @@ limitations under the License.
 
 package v1
 
+// AppawareClusterAutoscalerListerExpansion allows custom methods to be added to
+// AppawareClusterAutoscalerLister.
+type AppawareClusterAutoscalerListerExpansion interface{}
+
+// AppawareClusterAutoscalerNamespaceListerExpansion allows custom methods to be added to
+// AppawareClusterAutoscalerNamespaceLister.
+type AppawareClusterAutoscalerNamespaceListerExpansion interface{}
+
 // AppawareHorizontalPodAutoscalerListerExpansion allows custom methods to be added to
 // AppawareHorizontalPodAutoscalerLister.
 type AppawareHorizontalPodAutoscalerListerExpansion interface{}
@@ -25,11 +33,3 @@ type AppawareHorizontalPodAutoscalerListerExpansion interface{}
 // AppawareHorizontalPodAutoscalerNamespaceListerExpansion allows custom methods to be added to
 // AppawareHorizontalPodAutoscalerNamespaceLister.
 type AppawareHorizontalPodAutoscalerNamespaceListerExpansion interface{}
-
-// ResourceRecommendationListerExpansion allows custom methods to be added to
-// ResourceRecommendationLister.
-type ResourceRecommendationListerExpansion interface{}
-
-// ResourceRecommendationNamespaceListerExpansion allows custom methods to be added to
-// ResourceRecommendationNamespaceLister.
-type ResourceRecommendationNamespaceListerExpansion interface{}

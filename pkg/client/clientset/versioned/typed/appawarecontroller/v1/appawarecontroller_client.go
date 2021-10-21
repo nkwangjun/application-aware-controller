@@ -26,8 +26,8 @@ import (
 
 type AppawarecontrollerV1Interface interface {
 	RESTClient() rest.Interface
+	AppawareClusterAutoscalersGetter
 	AppawareHorizontalPodAutoscalersGetter
-	ResourceRecommendationsGetter
 }
 
 // AppawarecontrollerV1Client is used to interact with features provided by the appawarecontroller.k8s.io group.
@@ -35,12 +35,12 @@ type AppawarecontrollerV1Client struct {
 	restClient rest.Interface
 }
 
-func (c *AppawarecontrollerV1Client) AppawareHorizontalPodAutoscalers(namespace string) AppawareHorizontalPodAutoscalerInterface {
-	return newAppawareHorizontalPodAutoscalers(c, namespace)
+func (c *AppawarecontrollerV1Client) AppawareClusterAutoscalers(namespace string) AppawareClusterAutoscalerInterface {
+	return newAppawareClusterAutoscalers(c, namespace)
 }
 
-func (c *AppawarecontrollerV1Client) ResourceRecommendations(namespace string) ResourceRecommendationInterface {
-	return newResourceRecommendations(c, namespace)
+func (c *AppawarecontrollerV1Client) AppawareHorizontalPodAutoscalers(namespace string) AppawareHorizontalPodAutoscalerInterface {
+	return newAppawareHorizontalPodAutoscalers(c, namespace)
 }
 
 // NewForConfig creates a new AppawarecontrollerV1Client for the given config.

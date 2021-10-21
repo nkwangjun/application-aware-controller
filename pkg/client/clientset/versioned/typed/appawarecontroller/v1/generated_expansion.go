@@ -18,6 +18,6 @@ limitations under the License.
 
 package v1
 
-type AppawareHorizontalPodAutoscalerExpansion interface{}
+type AppawareClusterAutoscalerExpansion interface{}
 
-type ResourceRecommendationExpansion interface{}
+type AppawareHorizontalPodAutoscalerExpansion interface{}

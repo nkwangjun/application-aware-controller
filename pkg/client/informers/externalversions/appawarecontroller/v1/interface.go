@@ -24,10 +24,10 @@ import (
 
 // Interface provides access to all the informers in this group version.
 type Interface interface {
+	// AppawareClusterAutoscalers returns a AppawareClusterAutoscalerInformer.
+	AppawareClusterAutoscalers() AppawareClusterAutoscalerInformer
 	// AppawareHorizontalPodAutoscalers returns a AppawareHorizontalPodAutoscalerInformer.
 	AppawareHorizontalPodAutoscalers() AppawareHorizontalPodAutoscalerInformer
-	// ResourceRecommendations returns a ResourceRecommendationInformer.
-	ResourceRecommendations() ResourceRecommendationInformer
 }
 
 type version struct {
@@ -41,12 +41,12 @@ func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakList
 	return &version{factory: f, namespace: namespace, tweakListOptions: tweakListOptions}
 }
 
+// AppawareClusterAutoscalers returns a AppawareClusterAutoscalerInformer.
+func (v *version) AppawareClusterAutoscalers() AppawareClusterAutoscalerInformer {
+	return &appawareClusterAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
 // AppawareHorizontalPodAutoscalers returns a AppawareHorizontalPodAutoscalerInformer.
 func (v *version) AppawareHorizontalPodAutoscalers() AppawareHorizontalPodAutoscalerInformer {
 	return &appawareHorizontalPodAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
-}
-
-// ResourceRecommendations returns a ResourceRecommendationInformer.
-func (v *version) ResourceRecommendations() ResourceRecommendationInformer {
-	return &resourceRecommendationInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }

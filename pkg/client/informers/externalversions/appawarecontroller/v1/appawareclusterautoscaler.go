@@ -32,59 +32,59 @@ import (
 	cache "k8s.io/client-go/tools/cache"
 )
 
-// ResourceRecommendationInformer provides access to a shared informer and lister for
-// ResourceRecommendations.
-type ResourceRecommendationInformer interface {
+// AppawareClusterAutoscalerInformer provides access to a shared informer and lister for
+// AppawareClusterAutoscalers.
+type AppawareClusterAutoscalerInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1.ResourceRecommendationLister
+	Lister() v1.AppawareClusterAutoscalerLister
 }
 
-type resourceRecommendationInformer struct {
+type appawareClusterAutoscalerInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
 	tweakListOptions internalinterfaces.TweakListOptionsFunc
 	namespace        string
 }
 
-// NewResourceRecommendationInformer constructs a new informer for ResourceRecommendation type.
+// NewAppawareClusterAutoscalerInformer constructs a new informer for AppawareClusterAutoscaler type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
-func NewResourceRecommendationInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
-	return NewFilteredResourceRecommendationInformer(client, namespace, resyncPeriod, indexers, nil)
+func NewAppawareClusterAutoscalerInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
+	return NewFilteredAppawareClusterAutoscalerInformer(client, namespace, resyncPeriod, indexers, nil)
 }
 
-// NewFilteredResourceRecommendationInformer constructs a new informer for ResourceRecommendation type.
+// NewFilteredAppawareClusterAutoscalerInformer constructs a new informer for AppawareClusterAutoscaler type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
-func NewFilteredResourceRecommendationInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
+func NewFilteredAppawareClusterAutoscalerInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
 	return cache.NewSharedIndexInformer(
 		&cache.ListWatch{
 			ListFunc: func(options metav1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.AppawarecontrollerV1().ResourceRecommendations(namespace).List(context.TODO(), options)
+				return client.AppawarecontrollerV1().AppawareClusterAutoscalers(namespace).List(context.TODO(), options)
 			},
 			WatchFunc: func(options metav1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.AppawarecontrollerV1().ResourceRecommendations(namespace).Watch(context.TODO(), options)
+				return client.AppawarecontrollerV1().AppawareClusterAutoscalers(namespace).Watch(context.TODO(), options)
 			},
 		},
-		&appawarecontrollerv1.ResourceRecommendation{},
+		&appawarecontrollerv1.AppawareClusterAutoscaler{},
 		resyncPeriod,
 		indexers,
 	)
 }
 
-func (f *resourceRecommendationInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewFilteredResourceRecommendationInformer(client, f.namespace, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, f.tweakListOptions)
+func (f *appawareClusterAutoscalerInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
+	return NewFilteredAppawareClusterAutoscalerInformer(client, f.namespace, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, f.tweakListOptions)
 }
 
-func (f *resourceRecommendationInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&appawarecontrollerv1.ResourceRecommendation{}, f.defaultInformer)
+func (f *appawareClusterAutoscalerInformer) Informer() cache.SharedIndexInformer {
+	return f.factory.InformerFor(&appawarecontrollerv1.AppawareClusterAutoscaler{}, f.defaultInformer)
 }
 
-func (f *resourceRecommendationInformer) Lister() v1.ResourceRecommendationLister {
-	return v1.NewResourceRecommendationLister(f.Informer().GetIndexer())
+func (f *appawareClusterAutoscalerInformer) Lister() v1.AppawareClusterAutoscalerLister {
+	return v1.NewAppawareClusterAutoscalerLister(f.Informer().GetIndexer())
 }

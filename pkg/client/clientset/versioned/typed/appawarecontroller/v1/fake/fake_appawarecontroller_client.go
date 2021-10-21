@@ -28,12 +28,12 @@ type FakeAppawarecontrollerV1 struct {
 	*testing.Fake
 }
 
-func (c *FakeAppawarecontrollerV1) AppawareHorizontalPodAutoscalers(namespace string) v1.AppawareHorizontalPodAutoscalerInterface {
-	return &FakeAppawareHorizontalPodAutoscalers{c, namespace}
+func (c *FakeAppawarecontrollerV1) AppawareClusterAutoscalers(namespace string) v1.AppawareClusterAutoscalerInterface {
+	return &FakeAppawareClusterAutoscalers{c, namespace}
 }
 
-func (c *FakeAppawarecontrollerV1) ResourceRecommendations(namespace string) v1.ResourceRecommendationInterface {
-	return &FakeResourceRecommendations{c, namespace}
+func (c *FakeAppawarecontrollerV1) AppawareHorizontalPodAutoscalers(namespace string) v1.AppawareHorizontalPodAutoscalerInterface {
+	return &FakeAppawareHorizontalPodAutoscalers{c, namespace}
 }
 
 // RESTClient returns a RESTClient that is used to communicate
