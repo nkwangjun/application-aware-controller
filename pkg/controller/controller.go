@@ -226,7 +226,7 @@ func (c *Controller) syncHandler(key string) error {
 	return nil
 }
 
-// enqueueForecastPolicy takes a apha resource and converts it into a namespace/name
+// enqueueForecastPolicy takes an apha resource and converts it into a namespace/name
 // string which is then put onto the work queue. This method should *not* be
 // passed resources of any type other than Foo.
 func (c *Controller) enqueueAppawareHorizontalPodAutoscaler(obj interface{}) {
