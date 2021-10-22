@@ -1,5 +1,5 @@
 /*
-Copyright The KubeEdge Authors.
+Copyright The Kubernetes Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -22,13 +22,13 @@ import (
 	"context"
 	time "time"
 
-	appawarecontrollerv1 "github.com/kubeedge/sedna/pkg/apis/appawarecontroller/v1"
-	versioned "github.com/kubeedge/sedna/pkg/client/clientset/versioned"
-	internalinterfaces "github.com/kubeedge/sedna/pkg/client/informers/externalversions/internalinterfaces"
-	v1 "github.com/kubeedge/sedna/pkg/client/listers/appawarecontroller/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	watch "k8s.io/apimachinery/pkg/watch"
+	appawarecontrollerv1 "k8s.io/application-aware-controller/pkg/apis/appawarecontroller/v1"
+	versioned "k8s.io/application-aware-controller/pkg/client/clientset/versioned"
+	internalinterfaces "k8s.io/application-aware-controller/pkg/client/informers/externalversions/internalinterfaces"
+	v1 "k8s.io/application-aware-controller/pkg/client/listers/appawarecontroller/v1"
 	cache "k8s.io/client-go/tools/cache"
 )
 

@@ -1,5 +1,5 @@
 /*
-Copyright The KubeEdge Authors.
+Copyright The Kubernetes Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,11 +19,11 @@ limitations under the License.
 package fake
 
 import (
-	clientset "github.com/kubeedge/sedna/pkg/client/clientset/versioned"
-	appawarecontrollerv1 "github.com/kubeedge/sedna/pkg/client/clientset/versioned/typed/appawarecontroller/v1"
-	fakeappawarecontrollerv1 "github.com/kubeedge/sedna/pkg/client/clientset/versioned/typed/appawarecontroller/v1/fake"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/watch"
+	clientset "k8s.io/application-aware-controller/pkg/client/clientset/versioned"
+	appawarecontrollerv1 "k8s.io/application-aware-controller/pkg/client/clientset/versioned/typed/appawarecontroller/v1"
+	fakeappawarecontrollerv1 "k8s.io/application-aware-controller/pkg/client/clientset/versioned/typed/appawarecontroller/v1/fake"
 	"k8s.io/client-go/discovery"
 	fakediscovery "k8s.io/client-go/discovery/fake"
 	"k8s.io/client-go/testing"
@@ -74,7 +74,10 @@ func (c *Clientset) Tracker() testing.ObjectTracker {
 	return c.tracker
 }
 
-var _ clientset.Interface = &Clientset{}
+var (
+	_ clientset.Interface = &Clientset{}
+	_ testing.FakeClient  = &Clientset{}
+)
 
 // AppawarecontrollerV1 retrieves the AppawarecontrollerV1Client
 func (c *Clientset) AppawarecontrollerV1() appawarecontrollerv1.AppawarecontrollerV1Interface {

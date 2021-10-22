@@ -1,5 +1,5 @@
 /*
-Copyright The KubeEdge Authors.
+Copyright The Kubernetes Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,12 +19,12 @@ limitations under the License.
 package scheme
 
 import (
-	appawarecontrollerv1 "github.com/kubeedge/sedna/pkg/apis/appawarecontroller/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	serializer "k8s.io/apimachinery/pkg/runtime/serializer"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
+	appawarecontrollerv1 "k8s.io/application-aware-controller/pkg/apis/appawarecontroller/v1"
 )
 
 var Scheme = runtime.NewScheme()

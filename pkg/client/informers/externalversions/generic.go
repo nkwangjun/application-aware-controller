@@ -1,5 +1,5 @@
 /*
-Copyright The KubeEdge Authors.
+Copyright The Kubernetes Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -21,8 +21,8 @@ package externalversions
 import (
 	"fmt"
 
-	v1 "github.com/kubeedge/sedna/pkg/apis/appawarecontroller/v1"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
+	v1 "k8s.io/application-aware-controller/pkg/apis/appawarecontroller/v1"
 	cache "k8s.io/client-go/tools/cache"
 )
 

@@ -1,5 +1,5 @@
 /*
-Copyright The KubeEdge Authors.
+Copyright The Kubernetes Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -21,9 +21,9 @@ package internalinterfaces
 import (
 	time "time"
 
-	versioned "github.com/kubeedge/sedna/pkg/client/clientset/versioned"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
+	versioned "k8s.io/application-aware-controller/pkg/client/clientset/versioned"
 	cache "k8s.io/client-go/tools/cache"
 )
 

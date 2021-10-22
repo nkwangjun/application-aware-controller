@@ -1,5 +1,5 @@
 /*
-Copyright The KubeEdge Authors.
+Copyright The Kubernetes Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,8 +19,8 @@ limitations under the License.
 package appawarecontroller
 
 import (
-	v1 "github.com/kubeedge/sedna/pkg/client/informers/externalversions/appawarecontroller/v1"
-	internalinterfaces "github.com/kubeedge/sedna/pkg/client/informers/externalversions/internalinterfaces"
+	v1 "k8s.io/application-aware-controller/pkg/client/informers/externalversions/appawarecontroller/v1"
+	internalinterfaces "k8s.io/application-aware-controller/pkg/client/informers/externalversions/internalinterfaces"
 )
 
 // Interface provides access to each of this group's versions.

@@ -1,5 +1,5 @@
 /*
-Copyright The KubeEdge Authors.
+Copyright The Kubernetes Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ package versioned
 import (
 	"fmt"
 
-	appawarecontrollerv1 "github.com/kubeedge/sedna/pkg/client/clientset/versioned/typed/appawarecontroller/v1"
+	appawarecontrollerv1 "k8s.io/application-aware-controller/pkg/client/clientset/versioned/typed/appawarecontroller/v1"
 	discovery "k8s.io/client-go/discovery"
 	rest "k8s.io/client-go/rest"
 	flowcontrol "k8s.io/client-go/util/flowcontrol"

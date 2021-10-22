@@ -1,5 +1,5 @@
 /*
-Copyright The KubeEdge Authors.
+Copyright The Kubernetes Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,9 +19,9 @@ limitations under the License.
 package v1
 
 import (
-	v1 "github.com/kubeedge/sedna/pkg/apis/appawarecontroller/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/labels"
+	v1 "k8s.io/application-aware-controller/pkg/apis/appawarecontroller/v1"
 	"k8s.io/client-go/tools/cache"
 )
 
