@@ -35,7 +35,7 @@ spec:
   maxReplicas: 10
   targetCPUUtilizationPercentage: 50
 ---
-apiVersion: aacontroller.k8s.io/v1
+apiVersion: appawarecontroller.k8s.io/v1
 kind: AppawareHorizontalPodAutoscaler
 metadata:
   name: appawarehpa-sample
