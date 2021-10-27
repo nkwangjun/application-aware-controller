@@ -26,6 +26,8 @@ import (
 type Interface interface {
 	// AppawareHorizontalPodAutoscalers returns a AppawareHorizontalPodAutoscalerInformer.
 	AppawareHorizontalPodAutoscalers() AppawareHorizontalPodAutoscalerInformer
+	// ResourcesWarmupActuators returns a ResourcesWarmupActuatorInformer.
+	ResourcesWarmupActuators() ResourcesWarmupActuatorInformer
 }
 
 type version struct {
@@ -42,4 +44,9 @@ func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakList
 // AppawareHorizontalPodAutoscalers returns a AppawareHorizontalPodAutoscalerInformer.
 func (v *version) AppawareHorizontalPodAutoscalers() AppawareHorizontalPodAutoscalerInformer {
 	return &appawareHorizontalPodAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// ResourcesWarmupActuators returns a ResourcesWarmupActuatorInformer.
+func (v *version) ResourcesWarmupActuators() ResourcesWarmupActuatorInformer {
+	return &resourcesWarmupActuatorInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
