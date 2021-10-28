@@ -80,3 +80,26 @@ type AppawareHorizontalPodAutoscalerList struct {
 
 	Items []AppawareHorizontalPodAutoscaler `json:"items"`
 }
+
+// +genclient
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+
+// ResourcesWarmupActuator is a specification for a ResourcesWarmupActuator resource
+type ResourcesWarmupActuator struct {
+	metav1.TypeMeta   `json:",inline"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
+	StartTime         metav1.Timestamp `json:"start_time"`
+	EndTime           metav1.Timestamp `json:"end_time"`
+	ResourcesType     string           `json:"resources_type"`
+	ResourceId        string           `json:"resource_id"`
+}
+
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+
+// ResourcesWarmupActuatorList is a list of ResourcesWarmupActuatorList resources
+type ResourcesWarmupActuatorList struct {
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata"`
+
+	Items []ResourcesWarmupActuator `json:"items"`
+}

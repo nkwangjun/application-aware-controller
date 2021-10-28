@@ -32,6 +32,10 @@ func (c *FakeAppawarecontrollerV1) AppawareHorizontalPodAutoscalers(namespace st
 	return &FakeAppawareHorizontalPodAutoscalers{c, namespace}
 }
 
+func (c *FakeAppawarecontrollerV1) ResourcesWarmupActuators(namespace string) v1.ResourcesWarmupActuatorInterface {
+	return &FakeResourcesWarmupActuators{c, namespace}
+}
+
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
 func (c *FakeAppawarecontrollerV1) RESTClient() rest.Interface {

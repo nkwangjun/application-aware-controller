@@ -25,3 +25,11 @@ type AppawareHorizontalPodAutoscalerListerExpansion interface{}
 // AppawareHorizontalPodAutoscalerNamespaceListerExpansion allows custom methods to be added to
 // AppawareHorizontalPodAutoscalerNamespaceLister.
 type AppawareHorizontalPodAutoscalerNamespaceListerExpansion interface{}
+
+// ResourcesWarmupActuatorListerExpansion allows custom methods to be added to
+// ResourcesWarmupActuatorLister.
+type ResourcesWarmupActuatorListerExpansion interface{}
+
+// ResourcesWarmupActuatorNamespaceListerExpansion allows custom methods to be added to
+// ResourcesWarmupActuatorNamespaceLister.
+type ResourcesWarmupActuatorNamespaceListerExpansion interface{}

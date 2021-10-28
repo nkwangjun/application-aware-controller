@@ -55,6 +55,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 	// Group=appawarecontroller.k8s.io, Version=v1
 	case v1.SchemeGroupVersion.WithResource("appawarehorizontalpodautoscalers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Appawarecontroller().V1().AppawareHorizontalPodAutoscalers().Informer()}, nil
+	case v1.SchemeGroupVersion.WithResource("resourceswarmupactuators"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Appawarecontroller().V1().ResourcesWarmupActuators().Informer()}, nil
 
 	}
 
