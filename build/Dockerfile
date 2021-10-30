@@ -3,4 +3,9 @@ From alpine:3.12.0
 
 ADD application-aware-controller /usr/local/bin
 
-ENTRYPOINT ["/usr/local/bin/application-aware-controller"]
+WORKDIR /root/
+
+COPY entrypoint.sh .
+RUN chmod +x /root/docker-entrypoint.sh
+
+ENTRYPOINT  ["/root/entrypoint.sh"]
